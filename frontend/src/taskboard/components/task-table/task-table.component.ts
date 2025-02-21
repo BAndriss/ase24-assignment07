@@ -1,9 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { CdkDragDrop, moveItemInArray, transferArrayItem, CdkDropList, CdkDrag } from '@angular/cdk/drag-drop';
-import { MatTableDataSource } from '@angular/material/table';
+import {Component, OnInit} from '@angular/core';
+import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {TaskDto} from '../../client/model/taskDto';
 import {TasksService} from '../../services/tasks.service';
 
+export enum TaskStatus {
+  TODO = 'TODO',
+  DOING = 'DOING',
+  DONE = 'DONE'
+}
 /**
  * @title Drag&Drop connected sorting
  * Source of this component: https://material.angular.io/cdk/drag-drop/overview#transferring-items-between-lists
@@ -30,12 +34,16 @@ export class TaskTableComponent  implements OnInit {
         event.previousIndex,
         event.currentIndex,
       );
+      const updatedTask : TaskDto = event.container.data[event.currentIndex];
+      updatedTask.status = this.getStatusForContainer(event.container.id);
+      this.tasksService.updateTaskStatus(updatedTask).then(() => {
+        console.log('Task updated successfully:');
+      }).catch(error => {
+        console.error('Failed to update task:', error);
+      });
     }
 
   }
-
-  displayedColumns: string[] = ['title', 'description', 'status', 'assignee'];
-  dataSource = new MatTableDataSource<TaskDto>([]);
 
   constructor(private tasksService: TasksService) {
     this.tasksService = tasksService;
@@ -43,11 +51,19 @@ export class TaskTableComponent  implements OnInit {
 
   ngOnInit() {
     this.tasksService.getTasks().then(tasks => {
-      this.dataSource.data = tasks;
       this.todo = tasks.filter(task => task.status === 'TODO');
       this.done = tasks.filter(task => task.status === 'DONE');
       this.doing = tasks.filter(task => task.status === 'DOING');
     });
 
+  }
+
+  private getStatusForContainer(containerId: string): TaskStatus{
+    switch (containerId){
+      case 'todoList': return TaskStatus.TODO;
+      case 'doingList': return TaskStatus.DOING;
+      case 'doneList': return TaskStatus.DONE;
+      default: return  TaskStatus.DOING;
+    }
   }
 }
