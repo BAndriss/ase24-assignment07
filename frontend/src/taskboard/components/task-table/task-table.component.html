@@ -1,61 +1,65 @@
-<div class="example-container">
-  <h2>TODO</h2>
-  <div
-    id = "todoList"
-    cdkDropList
-    #todoList="cdkDropList"
-    [cdkDropListData]="todo"
-    [cdkDropListConnectedTo]="[doingList, doneList]"
-    class="example-list"
-    (cdkDropListDropped)="drop($event)">
-    @for (item of todo; track item) {
-      <div class="example-box" cdkDrag>
-        <p>Title: {{ item.title }}</p>
-        <p>Description: {{ item.description }}</p>
-        <p>Assignee: {{ item.assignee?.name || 'No Assignee'}}</p>
-      </div>
-    }
+<input type="text" placeholder="Filter" #filter>
+<button class="primary" type="button" (click)="filterResults(filter.value)">Filter</button>
+
+<div>
+  <div class="example-container">
+    <h2>TODO</h2>
+    <div
+      id = "todoList"
+      cdkDropList
+      #todoList="cdkDropList"
+      [cdkDropListData]="filtered_todo"
+      [cdkDropListConnectedTo]="[doingList, doneList]"
+      class="example-list"
+      (cdkDropListDropped)="drop($event)">
+      @for (item of filtered_todo; track item) {
+        <div class="example-box" cdkDrag>
+          <p>Title: {{ item.title }}</p>
+          <p>Description: {{ item.description }}</p>
+          <p>Assignee: {{ item.assignee?.name || 'No Assignee'}}</p>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="example-container">
+    <h2>DOING</h2>
+
+    <div
+      id = "doingList"
+      cdkDropList
+      #doingList="cdkDropList"
+      [cdkDropListData]="filtered_doing"
+      [cdkDropListConnectedTo]="[todoList, doneList]"
+      class="example-list"
+      (cdkDropListDropped)="drop($event)">
+      @for (item of filtered_doing; track item) {
+        <div class="example-box" cdkDrag>
+          <p>Title: {{ item.title }}</p>
+          <p>Description: {{ item.description }}</p>
+          <p>Assignee: {{ item.assignee?.name || 'No Assignee'}}</p>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="example-container">
+    <h2>DONE</h2>
+    <div
+      id = "doneList"
+      cdkDropList
+      #doneList="cdkDropList"
+      [cdkDropListData]="filtered_done"
+      [cdkDropListConnectedTo]="[todoList, doingList]"
+      class="example-list"
+      (cdkDropListDropped)="drop($event)">
+      @for (item of filtered_done; track item) {
+        <div class="example-box" cdkDrag>
+          <p>Title: {{ item.title }}</p>
+          <p>Description: {{ item.description}}</p>
+          <p>Assignee: {{ item.assignee?.name || 'No Assignee'}}</p>
+        </div>
+      }
+    </div>
   </div>
 </div>
-
-<div class="example-container">
-  <h2>DOING</h2>
-
-  <div
-    id = "doingList"
-    cdkDropList
-    #doingList="cdkDropList"
-    [cdkDropListData]="doing"
-    [cdkDropListConnectedTo]="[todoList, doneList]"
-    class="example-list"
-    (cdkDropListDropped)="drop($event)">
-    @for (item of doing; track item) {
-      <div class="example-box" cdkDrag>
-        <p>Title: {{ item.title }}</p>
-        <p>Description: {{ item.description }}</p>
-        <p>Assignee: {{ item.assignee?.name || 'No Assignee'}}</p>
-      </div>
-    }
-  </div>
-</div>
-
-<div class="example-container">
-  <h2>DONE</h2>
-  <div
-    id = "doneList"
-    cdkDropList
-    #doneList="cdkDropList"
-    [cdkDropListData]="done"
-    [cdkDropListConnectedTo]="[todoList, doingList]"
-    class="example-list"
-    (cdkDropListDropped)="drop($event)">
-    @for (item of done; track item) {
-      <div class="example-box" cdkDrag>
-        <p>Title: {{ item.title }}</p>
-        <p>Description: {{ item.description}}</p>
-        <p>Assignee: {{ item.assignee?.name || 'No Assignee'}}</p>
-      </div>
-    }
-  </div>
-</div>
-

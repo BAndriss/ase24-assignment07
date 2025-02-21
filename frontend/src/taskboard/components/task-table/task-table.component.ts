@@ -54,6 +54,9 @@ export class TaskTableComponent  implements OnInit {
       this.todo = tasks.filter(task => task.status === 'TODO');
       this.done = tasks.filter(task => task.status === 'DONE');
       this.doing = tasks.filter(task => task.status === 'DOING');
+      this.filtered_todo = this.todo;
+      this.filtered_done = this.done;
+      this.filtered_doing = this.doing;
     });
 
   }
@@ -65,5 +68,39 @@ export class TaskTableComponent  implements OnInit {
       case 'doneList': return TaskStatus.DONE;
       default: return  TaskStatus.DOING;
     }
+  }
+
+
+  // The filter is based on the following website: https://v17.angular.io/tutorial/first-app/first-app-lesson-13
+  filtered_todo: TaskDto[] = [];
+  filtered_done: TaskDto[] = [];
+  filtered_doing: TaskDto[] = [];
+
+  filterResults(text: string){
+    console.log(text);
+    if(!text || text == ""){
+      this.filtered_todo = this.todo;
+      this.filtered_done = this.done;
+      this.filtered_doing = this.doing;
+      return;
+    }
+    this.filtered_todo = this.todo.filter(
+      task =>
+        task.title.toLowerCase().includes(text.toLowerCase()) ||
+        task.description.toLowerCase().includes(text.toLowerCase()) ||
+        (task.assignee?.name.toLowerCase().includes(text.toLowerCase()) ?? false)
+    )
+    this.filtered_done = this.done.filter(
+      task =>
+        task.title.toLowerCase().includes(text.toLowerCase()) ||
+        task.description.toLowerCase().includes(text.toLowerCase()) ||
+        (task.assignee?.name.toLowerCase().includes(text.toLowerCase()) ?? false)
+    )
+    this.filtered_doing = this.doing.filter(
+      task =>
+        task.title.toLowerCase().includes(text.toLowerCase()) ||
+        task.description.toLowerCase().includes(text.toLowerCase()) ||
+        (task.assignee?.name.toLowerCase().includes(text.toLowerCase()) ?? false)
+    )
   }
 }
